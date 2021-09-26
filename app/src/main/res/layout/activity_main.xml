@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl"
+    tools:context=".activities.MainActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/input_source_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@id/usage_spinner"
+        app:layout_constraintEnd_toEndOf="@id/angle_spinner"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/guideline_center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/guideline_center_horizontal" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/usage_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="@id/angle_spinner"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintBottom_toTopOf="@id/angle_spinner"
+        app:layout_constraintStart_toEndOf="@id/guideline_center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/input_source_spinner" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/angle_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/guideline_center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/usage_spinner"
+        app:layout_constraintBottom_toTopOf="@id/guideline_center_horizontal_second"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center_horizontal_second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <Button
+        android:id="@+id/first_button_load_picture"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/guideline_center_horizontal_second"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/second_button_load_picture"
+        android:text="@string/second_image_button_title"
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/second_button_load_picture"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/guideline_center_horizontal_second"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/first_button_load_picture"
+        android:text="@string/first_image_button_title"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/first_image_imageview"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toBottomOf="@id/first_button_load_picture"
+        app:layout_constraintStart_toStartOf="@id/first_button_load_picture"
+        app:layout_constraintEnd_toEndOf="@id/first_button_load_picture"
+        android:visibility="gone"
+        />
+
+
+    <ImageView
+        android:id="@+id/second_image_imageview"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toBottomOf="@id/second_button_load_picture"
+        app:layout_constraintStart_toStartOf="@id/second_button_load_picture"
+        app:layout_constraintEnd_toEndOf="@id/second_button_load_picture"
+        android:visibility="gone"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

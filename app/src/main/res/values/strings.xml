@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">handy</string>
+    <string name="neutral">خنثی</string>
+    <string name="domain">دامنه حرکت</string>
+    <string name="domain_to_normal">دانمه نسبت به نرمال</string>
+    <string name="differences">اختلاف بین زوایا</string>
+    <string name="thumb_ip_flexion">Thumb IP Flexion</string>
+    <string name="thumb_mcp_flexion">Thumb MCP Flexion</string>
+    <string name="thumb_cmc_radial_abduction">Thumb CMC Radial Abduction</string>
+    <string name="finger_dip_rom">Finger DIP ROM</string>
+    <string name="finger_pip_rom">Finger PIP ROM</string>
+    <string name="finger_mcp_rom">Finger MCP ROM</string>
+    <string name="image">عکس</string>
+    <string name="video">فیلم</string>
+    <string name="camera">دوربین</string>
+    <string name="first_image_button_title">انتخاب تصویر دوم</string>
+    <string name="second_image_button_title">انتخاب تصویر اول</string>
+</resources>
