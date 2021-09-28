@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:spinnerMode="dropdown"
         app:layout_constraintBottom_toTopOf="@id/usage_spinner"
-        app:layout_constraintEnd_toEndOf="@id/angle_spinner"
+        app:layout_constraintEnd_toEndOf="@id/angle_selection_button"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/guideline_center_vertical"
         app:layout_constraintTop_toBottomOf="@id/guideline_center_horizontal" />
@@ -37,22 +37,22 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@id/angle_spinner"
-        app:layout_constraintEnd_toEndOf="@id/angle_spinner"
+        app:layout_constraintBottom_toTopOf="@id/angle_selection_button"
+        app:layout_constraintEnd_toEndOf="@id/angle_selection_button"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/guideline_center_vertical"
         app:layout_constraintTop_toBottomOf="@id/input_source_spinner" />
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/angle_spinner"
+    <Button
+        android:id="@+id/angle_selection_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"
         app:layout_constraintBottom_toTopOf="@id/guideline_center_horizontal_second"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toEndOf="@id/guideline_center_vertical"
-        app:layout_constraintTop_toBottomOf="@id/usage_spinner" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/usage_spinner"
+        android:text="@string/select_angle_title"
+        />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_center_horizontal_second"
@@ -138,6 +138,7 @@
         android:padding="0dp"
         android:text="@string/start_process_title"
         android:textSize="20sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

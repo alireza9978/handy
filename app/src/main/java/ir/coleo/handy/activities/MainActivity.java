@@ -20,12 +20,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ir.coleo.handy.R;
 import ir.coleo.handy.models.Angle;
 import ir.coleo.handy.models.InputSource;
 import ir.coleo.handy.models.Usages;
+
+import static ir.coleo.handy.constant.Constants.ANGLE_INTENT_DATA;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private VideoView videoView;
 
     private Button startProcessButton;
+    private ArrayList<Angle> selectedAngle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkImagesAndShowProcess() {
-        if (firstImage != null && secondImage != null) {
+        if (firstImage != null && secondImage != null && selectedAngle != null &&
+                !selectedAngle.isEmpty()) {
             showProcessButton();
         } else {
             hideProcessButton();
@@ -138,7 +144,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkVideoAndShowProcess() {
-        if (videoUri != null) {
+        if (videoUri != null && selectedAngle != null && !selectedAngle.isEmpty()) {
+            showProcessButton();
+        } else {
+            hideProcessButton();
+        }
+    }
+
+    private void checkCameraAndShowProcess() {
+        if (selectedAngle != null && !selectedAngle.isEmpty()) {
             showProcessButton();
         } else {
             hideProcessButton();
@@ -166,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                 if (id == 2) {
                     hideImageInputState();
                     hideVideoInputState();
-                    showProcessButton();
+                    checkCameraAndShowProcess();
                 }
             }
 
@@ -178,10 +192,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAngleDropDownValue() {
-        AppCompatSpinner dropdown = findViewById(R.id.angle_spinner);
-        ArrayList<String> usages = Angle.getStrings(this);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, usages);
-        dropdown.setAdapter(adapter);
+        Button angleSelectionButton = findViewById(R.id.angle_selection_button);
+        ActivityResultLauncher<Intent> angleSelectionResult = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    Intent resultIntent = result.getData();
+                    if (resultIntent != null) {
+                        if (result.getResultCode() == RESULT_OK) {
+                            selectedAngle = null;
+                            Serializable serializable = resultIntent.getExtras().getSerializable(ANGLE_INTENT_DATA);
+                            if (serializable instanceof ArrayList) {
+                                selectedAngle = (ArrayList<Angle>) serializable;
+                            }
+                            if (selectedAngle == null){
+                                hideProcessButton();
+                            }
+                        }
+                    }
+                });
+
+
+        angleSelectionButton.setOnClickListener(v -> {
+            Intent gallery = new Intent(this, AngleSelectionActivity.class);
+            angleSelectionResult.launch(gallery);
+        });
     }
 
     private void setUsageDropDownValue() {

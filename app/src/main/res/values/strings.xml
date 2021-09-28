@@ -18,4 +18,6 @@
     <string name="video_input_button_title">انتخاب فیلم</string>
     <string name="camera_input_button_title">روشن کردن دوربین</string>
     <string name="start_process_title">شروع پردازش</string>
+    <string name="submit_title">تایید</string>
+    <string name="select_angle_title">انتخاب زاویه‌ها برای محاسبه</string>
 </resources>
