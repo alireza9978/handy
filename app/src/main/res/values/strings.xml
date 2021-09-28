@@ -13,6 +13,9 @@
     <string name="image">عکس</string>
     <string name="video">فیلم</string>
     <string name="camera">دوربین</string>
-    <string name="first_image_button_title">انتخاب تصویر دوم</string>
-    <string name="second_image_button_title">انتخاب تصویر اول</string>
+    <string name="first_image_button_title">انتخاب تصویر اول</string>
+    <string name="second_image_button_title">انتخاب تصویر دوم</string>
+    <string name="video_input_button_title">انتخاب فیلم</string>
+    <string name="camera_input_button_title">روشن کردن دوربین</string>
+    <string name="start_process_title">شروع پردازش</string>
 </resources>
