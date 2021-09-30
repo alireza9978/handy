@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,11 +25,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import ir.coleo.handy.R;
+import ir.coleo.handy.constant.Constants;
 import ir.coleo.handy.models.Angle;
 import ir.coleo.handy.models.InputSource;
 import ir.coleo.handy.models.Usages;
 
 import static ir.coleo.handy.constant.Constants.ANGLE_INTENT_DATA;
+import static ir.coleo.handy.constant.Constants.createImageFromBitmap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private Button startProcessButton;
     private ArrayList<Angle> selectedAngle;
 
+    private InputSource inputSource = InputSource.Image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,41 @@ public class MainActivity extends AppCompatActivity {
 
     private void defineProcessViews() {
         startProcessButton = findViewById(R.id.start_process_button);
+
+        startProcessButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, DetectionActivity.class);
+            intent.putExtra(Constants.INPUT_METHOD, inputSource);
+            switch (inputSource) {
+                case Image: {
+                    if (firstImage != null && secondImage != null) {
+                        intent.putExtra(Constants.INPUT_IMAGE_ONE, createImageFromBitmap(firstImage, MainActivity.this, true));
+                        intent.putExtra(Constants.INPUT_IMAGE_TWO, createImageFromBitmap(secondImage, MainActivity.this, false));
+                    } else {
+                        Toast.makeText(MainActivity.this, R.string.input_image_error, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                }
+                case Video:
+                    if (videoUri != null) {
+                        intent.putExtra(Constants.INPUT_VIDEO, videoUri);
+                    }else{
+                        Toast.makeText(MainActivity.this, R.string.input_video_error, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                case Camera:
+                    break;
+            }
+            if (selectedAngle != null) {
+                intent.putExtra(Constants.DETECTION_ANGLE, selectedAngle);
+            } else {
+                Toast.makeText(MainActivity.this, R.string.input_selected_angle_error, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            startActivity(intent);
+        });
+
     }
 
     private void defineVideoViews() {
@@ -171,16 +210,19 @@ public class MainActivity extends AppCompatActivity {
                     hideProcessButton();
                     hideVideoInputState();
                     showImageInputState();
+                    inputSource = InputSource.Image;
                 }
                 if (id == 1) {
                     hideProcessButton();
                     hideImageInputState();
                     showVideoInputState();
+                    inputSource = InputSource.Video;
                 }
                 if (id == 2) {
                     hideImageInputState();
                     hideVideoInputState();
                     checkCameraAndShowProcess();
+                    inputSource = InputSource.Camera;
                 }
             }
 
@@ -203,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                             if (serializable instanceof ArrayList) {
                                 selectedAngle = (ArrayList<Angle>) serializable;
                             }
-                            if (selectedAngle == null){
+                            if (selectedAngle == null) {
                                 hideProcessButton();
                             }
                         }

@@ -2,11 +2,12 @@ package ir.coleo.handy.models;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ir.coleo.handy.R;
 
-public enum InputSource {
+public enum InputSource implements Serializable {
 
     Image,
     Video,

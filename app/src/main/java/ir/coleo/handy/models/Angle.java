@@ -2,11 +2,12 @@ package ir.coleo.handy.models;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ir.coleo.handy.R;
 
-public enum Angle {
+public enum Angle implements Serializable {
 
     /**
      * +y
