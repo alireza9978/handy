@@ -21,10 +21,10 @@ import com.google.mediapipe.solutions.hands.HandsResult;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.function.BinaryOperator;
 
 import ir.coleo.handy.R;
 import ir.coleo.handy.constant.Constants;
+import ir.coleo.handy.constant.ImageUtil;
 import ir.coleo.handy.customViews.HandsResultImageView;
 import ir.coleo.handy.models.Angle;
 import ir.coleo.handy.models.InputSource;
@@ -78,12 +78,11 @@ public class DetectionActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         switch (inputSource) {
             case Image: {
-                detectPointImage(firstImage, R.id.hand_result_image_one);
-                detectPointImage(secondImage, R.id.hand_result_image_two);
+                detectPointImage(ImageUtil.scale(firstImage, 1000), R.id.hand_result_image_one);
+                detectPointImage(ImageUtil.scale(secondImage, 1000), R.id.hand_result_image_two);
                 break;
             }
             case Video:
-                break;
             case Camera:
                 break;
         }
@@ -95,12 +94,12 @@ public class DetectionActivity extends AppCompatActivity {
                 .setMaxNumHands(1)
                 .setRunOnGpu(RUN_ON_GPU)
                 .build());
-        HandsResultImageView imageView = new HandsResultImageView(this);
+        HandsResultImageView imageView = new HandsResultImageView(this, selectedAngle);
 
         // Connects MediaPipe Hands to the user-defined HandsResultImageView.
         hands.setResultListener(
                 handsResult -> {
-                    logWristLandmark(handsResult, /*showPixelValues=*/ true);
+                    logWristLandmark(handsResult /*showPixelValues=*/);
                     imageView.setHandsResult(handsResult);
                     runOnUiThread(imageView::update);
                     deactivateProgressBar();
@@ -116,10 +115,10 @@ public class DetectionActivity extends AppCompatActivity {
         hands.send(image);
     }
 
-    private void logWristLandmark(HandsResult result, boolean showPixelValues) {
+    private void logWristLandmark(HandsResult result) {
         LandmarkProto.NormalizedLandmark wristLandmark = Hands.getHandLandmark(result, 0, HandLandmark.WRIST);
         // For Bitmaps, show the pixel values. For texture inputs, show the normalized coordinates.
-        if (showPixelValues) {
+        if (true) {
             int width = result.inputBitmap().getWidth();
             int height = result.inputBitmap().getHeight();
             Log.i(TAG, String.format("MediaPipe Hand wrist coordinates (pixel values): x=%f, y=%f",

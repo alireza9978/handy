@@ -2,10 +2,16 @@ package ir.coleo.handy.models;
 
 import android.content.Context;
 
+import com.google.mediapipe.formats.proto.LandmarkProto;
+import com.google.mediapipe.solutions.hands.Hands;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import ir.coleo.handy.R;
+
+import static com.google.mediapipe.solutions.hands.Hands.HAND_CONNECTIONS;
 
 public enum Angle implements Serializable {
 
@@ -31,10 +37,10 @@ public enum Angle implements Serializable {
     Finger_PIP_ROM(7, 6, 5, R.string.finger_pip_rom),
     Finger_MCP_ROM(8, 5, 0, R.string.finger_mcp_rom);
 
-    private int one;
-    private int two;
-    private int three;
-    private int name;
+    private final int one;
+    private final int two;
+    private final int three;
+    private final int name;
 
     Angle(int one, int two, int three, int name) {
         this.one = one;
@@ -80,4 +86,27 @@ public enum Angle implements Serializable {
     public int getName() {
         return name;
     }
+
+    public ArrayList<AngleConnection> getAngleConnections() {
+        ArrayList<AngleConnection> connections = new ArrayList<>();
+        connections.add(new AngleConnection(getOne(), getTwo()));
+        connections.add(new AngleConnection(getTwo(), getThree()));
+        return connections;
+    }
+
+    public ArrayList<LandmarkProto.NormalizedLandmark> getHandLandmarkList(List<LandmarkProto.NormalizedLandmark> handLandmarkList) {
+        ArrayList<LandmarkProto.NormalizedLandmark> result = new ArrayList<>();
+        result.add(handLandmarkList.get(getOne()));
+        result.add(handLandmarkList.get(getTwo()));
+        result.add(handLandmarkList.get(getThree()));
+
+        return result;
+    }
+
+    public String calculateAngle(List<LandmarkProto.NormalizedLandmark> landmarks) {
+
+
+        return "50.0";
+    }
+
 }

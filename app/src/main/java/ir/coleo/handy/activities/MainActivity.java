@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
                             videoView.setVideoURI(videoUri);
                             videoView.requestFocus();
                             videoView.start();
-                            checkVideoAndShowProcess();
                         }
                     }
                 });
@@ -147,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                             try {
                                 firstImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultIntent.getData());
                                 firstImageView.setImageBitmap(firstImage);
-                                checkImagesAndShowProcess();
                             } catch (IOException e) {
                                 Log.e(TAG, "Bitmap reading error:" + e);
                             }
@@ -164,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
                             try {
                                 secondImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultIntent.getData());
                                 secondImageView.setImageBitmap(secondImage);
-                                checkImagesAndShowProcess();
                             } catch (IOException e) {
                                 Log.e(TAG, "Bitmap reading error:" + e);
                             }
@@ -173,30 +170,6 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void checkImagesAndShowProcess() {
-        if (firstImage != null && secondImage != null && selectedAngle != null &&
-                !selectedAngle.isEmpty()) {
-            showProcessButton();
-        } else {
-            hideProcessButton();
-        }
-    }
-
-    private void checkVideoAndShowProcess() {
-        if (videoUri != null && selectedAngle != null && !selectedAngle.isEmpty()) {
-            showProcessButton();
-        } else {
-            hideProcessButton();
-        }
-    }
-
-    private void checkCameraAndShowProcess() {
-        if (selectedAngle != null && !selectedAngle.isEmpty()) {
-            showProcessButton();
-        } else {
-            hideProcessButton();
-        }
-    }
 
     private void setInputSourceDropDownValue() {
         AppCompatSpinner dropdown = findViewById(R.id.input_source_spinner);
@@ -207,13 +180,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (id == 0) {
-                    hideProcessButton();
                     hideVideoInputState();
                     showImageInputState();
                     inputSource = InputSource.Image;
                 }
                 if (id == 1) {
-                    hideProcessButton();
                     hideImageInputState();
                     showVideoInputState();
                     inputSource = InputSource.Video;
@@ -221,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
                 if (id == 2) {
                     hideImageInputState();
                     hideVideoInputState();
-                    checkCameraAndShowProcess();
                     inputSource = InputSource.Camera;
                 }
             }
@@ -245,9 +215,6 @@ public class MainActivity extends AppCompatActivity {
                             if (serializable instanceof ArrayList) {
                                 selectedAngle = (ArrayList<Angle>) serializable;
                             }
-                            if (selectedAngle == null) {
-                                hideProcessButton();
-                            }
                         }
                     }
                 });
@@ -266,10 +233,6 @@ public class MainActivity extends AppCompatActivity {
         dropdown.setAdapter(adapter);
     }
 
-
-    private void hideProcessButton() {
-        startProcessButton.setVisibility(View.GONE);
-    }
 
     private void hideImageInputState() {
         loadFirstImageButton.setVisibility(View.GONE);
@@ -319,7 +282,4 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void showProcessButton() {
-        startProcessButton.setVisibility(View.VISIBLE);
-    }
 }

@@ -47,12 +47,11 @@
         android:id="@+id/angle_selection_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/select_angle_title"
         app:layout_constraintBottom_toTopOf="@id/guideline_center_horizontal_second"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usage_spinner"
-        android:text="@string/select_angle_title"
-        />
+        app:layout_constraintTop_toBottomOf="@id/usage_spinner" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_center_horizontal_second"
@@ -65,7 +64,7 @@
         android:id="@+id/first_button_load_picture"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="@string/second_image_button_title"
+        android:text="@string/first_image_button_title"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/second_button_load_picture"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +74,7 @@
         android:id="@+id/second_button_load_picture"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="@string/first_image_button_title"
+        android:text="@string/second_image_button_title"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/first_button_load_picture"
@@ -138,7 +137,6 @@
         android:padding="0dp"
         android:text="@string/start_process_title"
         android:textSize="20sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
