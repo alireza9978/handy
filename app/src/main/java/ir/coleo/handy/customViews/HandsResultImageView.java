@@ -124,7 +124,7 @@ public class HandsResultImageView extends AppCompatImageView {
                             landmark.getX() * width, landmark.getY() * height, LANDMARK_RADIUS, landmarkPaint);
                 }
 
-
+                //calculate angle
                 NormalizedLandmark landmark = handLandmarkList.get(angle.getTwo());
                 String angleText = angle.calculateAngle(handLandmarkList);
                 setTextSizeForWidth(anglePaint, angleText);

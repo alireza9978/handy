@@ -104,9 +104,13 @@ public enum Angle implements Serializable {
     }
 
     public String calculateAngle(List<LandmarkProto.NormalizedLandmark> landmarks) {
-
-
-        return "50.0";
+        double diff_one_two_width = landmarks.get(getOne()).getX() - landmarks.get(getTwo()).getX();
+        double diff_one_two_height = landmarks.get(getOne()).getY() - landmarks.get(getTwo()).getY();
+        double diff_two_three_width = landmarks.get(getThree()).getX() - landmarks.get(getTwo()).getX();
+        double diff_two_three_height = landmarks.get(getThree()).getY() - landmarks.get(getTwo()).getY();
+        double radians = Math.atan2(diff_two_three_height, diff_two_three_width) - Math.atan2(diff_one_two_height, diff_one_two_width);
+        int degree = (int) Math.abs(radians * 180.0 / Math.PI);
+        return degree + "°";
     }
 
 }
