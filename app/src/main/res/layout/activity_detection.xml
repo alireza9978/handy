@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <FrameLayout
         android:id="@+id/hand_result_image_two"
         android:layout_width="0dp"
@@ -40,6 +39,15 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/angle_info_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/horizontal_guideline" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

@@ -3,15 +3,12 @@ package ir.coleo.handy.models;
 import android.content.Context;
 
 import com.google.mediapipe.formats.proto.LandmarkProto;
-import com.google.mediapipe.solutions.hands.Hands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import ir.coleo.handy.R;
-
-import static com.google.mediapipe.solutions.hands.Hands.HAND_CONNECTIONS;
 
 public enum Angle implements Serializable {
 
@@ -30,23 +27,25 @@ public enum Angle implements Serializable {
      * +y = -4
      */
 
-    Thumb_IP_Flexion(2, 3, 4, R.string.thumb_ip_flexion),
-    Thumb_MCP_Flexion(3, 2, 1, R.string.thumb_mcp_flexion),
-    Thumb_CMC_Radial_Abduction(4, 1, 8, R.string.thumb_cmc_radial_abduction),
-    Finger_DIP_ROM(8, 7, 6, R.string.finger_dip_rom),
-    Finger_PIP_ROM(7, 6, 5, R.string.finger_pip_rom),
-    Finger_MCP_ROM(8, 5, 0, R.string.finger_mcp_rom);
+    Thumb_IP_Flexion(2, 3, 4, R.string.thumb_ip_flexion, 10),
+    Thumb_MCP_Flexion(3, 2, 1, R.string.thumb_mcp_flexion, 90),
+    Thumb_CMC_Radial_Abduction(4, 1, 8, R.string.thumb_cmc_radial_abduction, 50),
+    Finger_DIP_ROM(8, 7, 6, R.string.finger_dip_rom, 40),
+    Finger_PIP_ROM(7, 6, 5, R.string.finger_pip_rom, 30),
+    Finger_MCP_ROM(8, 5, 0, R.string.finger_mcp_rom, 20);
 
     private final int one;
     private final int two;
     private final int three;
     private final int name;
+    private final int naturalAngle;
 
-    Angle(int one, int two, int three, int name) {
+    Angle(int one, int two, int three, int name, int naturalAngle) {
         this.one = one;
         this.two = two;
         this.three = three;
         this.name = name;
+        this.naturalAngle = naturalAngle;
     }
 
     public static ArrayList<Angle> getAngles() {
@@ -103,14 +102,25 @@ public enum Angle implements Serializable {
         return result;
     }
 
-    public String calculateAngle(List<LandmarkProto.NormalizedLandmark> landmarks) {
+    public int calculateAngle(List<LandmarkProto.NormalizedLandmark> landmarks) {
         double diff_one_two_width = landmarks.get(getOne()).getX() - landmarks.get(getTwo()).getX();
         double diff_one_two_height = landmarks.get(getOne()).getY() - landmarks.get(getTwo()).getY();
         double diff_two_three_width = landmarks.get(getThree()).getX() - landmarks.get(getTwo()).getX();
         double diff_two_three_height = landmarks.get(getThree()).getY() - landmarks.get(getTwo()).getY();
         double radians = Math.atan2(diff_two_three_height, diff_two_three_width) - Math.atan2(diff_one_two_height, diff_one_two_width);
-        int degree = (int) Math.abs(radians * 180.0 / Math.PI);
-        return degree + "°";
+        return (int) Math.abs(radians * 180.0 / Math.PI);
     }
 
+    public static String addDegree(int angle){
+        return angle + "°";
+    }
+
+
+    public String getNatural() {
+        return addDegree(naturalAngle);
+    }
+
+    public String getNaturalDifferent(int different) {
+        return addDegree((naturalAngle - different));
+    }
 }

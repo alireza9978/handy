@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.mediapipe.formats.proto.LandmarkProto;
 import com.google.mediapipe.solutions.hands.HandLandmark;
@@ -23,10 +25,13 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import ir.coleo.handy.R;
+import ir.coleo.handy.adapters.RecyclerViewAdapterAngleCalculation;
 import ir.coleo.handy.constant.Constants;
 import ir.coleo.handy.constant.ImageUtil;
 import ir.coleo.handy.customViews.HandsResultImageView;
 import ir.coleo.handy.models.Angle;
+import ir.coleo.handy.models.CalculatedAngle;
+import ir.coleo.handy.models.CalculatedAngleItem;
 import ir.coleo.handy.models.InputSource;
 
 public class DetectionActivity extends AppCompatActivity {
@@ -39,6 +44,10 @@ public class DetectionActivity extends AppCompatActivity {
     private Bitmap secondImage;
     private Uri videoUri;
 
+    private RecyclerViewAdapterAngleCalculation adapter;
+    private boolean firstDone = false;
+    private boolean secondDone = false;
+
     private ProgressBar progressBar;
     private int deactivationCount = 0;
     private int maxDeactivationCount = 2;
@@ -48,6 +57,13 @@ public class DetectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detection);
+
+        RecyclerView angleList = findViewById(R.id.angle_info_list);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        angleList.setHasFixedSize(true);
+        angleList.setLayoutManager(layoutManager);
+        adapter = new RecyclerViewAdapterAngleCalculation();
+        angleList.setAdapter(adapter);
 
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
@@ -78,8 +94,8 @@ public class DetectionActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         switch (inputSource) {
             case Image: {
-                detectPointImage(ImageUtil.scale(firstImage, 1000), R.id.hand_result_image_one);
-                detectPointImage(ImageUtil.scale(secondImage, 1000), R.id.hand_result_image_two);
+                detectPointImage(ImageUtil.scale(firstImage, 1000), R.id.hand_result_image_one, true);
+                detectPointImage(ImageUtil.scale(secondImage, 1000), R.id.hand_result_image_two, false);
                 break;
             }
             case Video:
@@ -88,7 +104,7 @@ public class DetectionActivity extends AppCompatActivity {
         }
     }
 
-    private void detectPointImage(Bitmap image, @IdRes int id) {
+    private synchronized void detectPointImage(Bitmap image, @IdRes int id, boolean first) {
         Hands hands = new Hands(this, HandsOptions.builder()
                 .setMode(HandsOptions.STATIC_IMAGE_MODE)
                 .setMaxNumHands(1)
@@ -103,6 +119,7 @@ public class DetectionActivity extends AppCompatActivity {
                     imageView.setHandsResult(handsResult);
                     runOnUiThread(imageView::update);
                     deactivateProgressBar();
+                    showAngleList(imageView.getCalculatedAngles(), first);
                 });
         hands.setErrorListener((message, e) -> Log.e(TAG, "MediaPipe Hands error:" + message));
 
@@ -118,32 +135,59 @@ public class DetectionActivity extends AppCompatActivity {
     private void logWristLandmark(HandsResult result) {
         LandmarkProto.NormalizedLandmark wristLandmark = Hands.getHandLandmark(result, 0, HandLandmark.WRIST);
         // For Bitmaps, show the pixel values. For texture inputs, show the normalized coordinates.
-        if (true) {
-            int width = result.inputBitmap().getWidth();
-            int height = result.inputBitmap().getHeight();
-            Log.i(TAG, String.format("MediaPipe Hand wrist coordinates (pixel values): x=%f, y=%f",
-                    wristLandmark.getX() * width, wristLandmark.getY() * height));
-        } else {
-            Log.i(TAG, String.format("MediaPipe Hand wrist normalized coordinates (value range: [0, 1]): x=%f, y=%f",
-                    wristLandmark.getX(), wristLandmark.getY()));
-        }
+
+        Log.i(TAG, String.format("MediaPipe Hand wrist normalized coordinates (value range: [0, 1]): x=%f, y=%f",
+                wristLandmark.getX(), wristLandmark.getY()));
+
     }
 
-    private void activateProgressBar(InputSource source){
+    private void activateProgressBar(InputSource source) {
         deactivationCount = 0;
         if (source == InputSource.Image) {
             maxDeactivationCount = 2;
-        }else{
+        } else {
             maxDeactivationCount = 1;
         }
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void deactivateProgressBar(){
+    private void deactivateProgressBar() {
         deactivationCount++;
-        if (deactivationCount == maxDeactivationCount){
+        if (deactivationCount == maxDeactivationCount) {
             progressBar.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private ArrayList<CalculatedAngle> otherCalculatedAngles;
+
+    private void showAngleList(ArrayList<CalculatedAngle> calculatedAngles, boolean first) {
+        if (first) {
+            firstDone = true;
+        } else {
+            secondDone = true;
+        }
+
+        if (firstDone && secondDone) {
+            ArrayList<CalculatedAngleItem> calculatedAngleItems = new ArrayList<>();
+            if (first) {
+                for (int i = 0; i < calculatedAngles.size(); i++) {
+                    CalculatedAngle firstAngle = calculatedAngles.get(i);
+                    CalculatedAngle secondAngle = otherCalculatedAngles.get(i);
+                    calculatedAngleItems.add(new CalculatedAngleItem(firstAngle.getAngle(), firstAngle.getImageAngle(), secondAngle.getImageAngle()));
+                }
+            } else {
+                for (int i = 0; i < calculatedAngles.size(); i++) {
+                    CalculatedAngle firstAngle = otherCalculatedAngles.get(i);
+                    CalculatedAngle secondAngle = calculatedAngles.get(i);
+                    calculatedAngleItems.add(new CalculatedAngleItem(firstAngle.getAngle(), firstAngle.getImageAngle(), secondAngle.getImageAngle()));
+                }
+            }
+            adapter.addItem(calculatedAngleItems);
+            adapter.notifyDataSetChanged();
+        } else {
+            this.otherCalculatedAngles = calculatedAngles;
+        }
+
     }
 
 }

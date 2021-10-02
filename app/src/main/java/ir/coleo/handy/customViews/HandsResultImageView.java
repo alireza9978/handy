@@ -32,6 +32,7 @@ import java.util.List;
 
 import ir.coleo.handy.models.Angle;
 import ir.coleo.handy.models.AngleConnection;
+import ir.coleo.handy.models.CalculatedAngle;
 
 /**
  * An ImageView implementation for displaying MediaPipe Hands results.
@@ -46,6 +47,7 @@ public class HandsResultImageView extends AppCompatImageView {
     private static final int CONNECTION_THICKNESS = 5;
     private Bitmap latest;
     private ArrayList<Angle> angleArrayList;
+    private final ArrayList<CalculatedAngle> calculatedAngles = new ArrayList<>();
 
     public HandsResultImageView(Context context) {
         super(context);
@@ -126,11 +128,13 @@ public class HandsResultImageView extends AppCompatImageView {
 
                 //calculate angle
                 NormalizedLandmark landmark = handLandmarkList.get(angle.getTwo());
-                String angleText = angle.calculateAngle(handLandmarkList);
+                int calculateAngle = angle.calculateAngle(handLandmarkList);
+                String angleText = Angle.addDegree(calculateAngle);
                 setTextSizeForWidth(anglePaint, angleText);
                 float x = landmark.getX() * width + width * 0.02f;
                 float y = landmark.getY() * height - height * 0.02f;
                 canvas.drawText(angleText, x, y, anglePaint);
+                calculatedAngles.add(new CalculatedAngle(angle, calculateAngle));
             }
         }
 
@@ -139,8 +143,9 @@ public class HandsResultImageView extends AppCompatImageView {
     /**
      * Sets the text size for a Paint object so a given string of text will be a
      * given width.
-     *  @param paint         the Paint to set the text size for
-     * @param text          the text that should be that width
+     *
+     * @param paint the Paint to set the text size for
+     * @param text  the text that should be that width
      */
     private static void setTextSizeForWidth(Paint paint, String text) {
 
@@ -156,6 +161,10 @@ public class HandsResultImageView extends AppCompatImageView {
 
         // Set the paint for that size.
         paint.setTextSize(desiredTextSize);
+    }
+
+    public ArrayList<CalculatedAngle> getCalculatedAngles() {
+        return calculatedAngles;
     }
 
 }

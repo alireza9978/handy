@@ -25,8 +25,8 @@ public class AngleSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_angle_selection);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView recyclerView = findViewById(R.id.angle_list_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         RecyclerViewAdapterAngleList adapter = new RecyclerViewAdapterAngleList(AngleItem.getAll());

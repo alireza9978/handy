@@ -23,4 +23,9 @@
     <string name="input_image_error">تصاویر ورودی را انتخاب کنید.</string>
     <string name="input_selected_angle_error">زاویه‌های مورد نظر را انتخاب کنید.</string>
     <string name="input_video_error">فیلم ورودی را انتخاب کنید.</string>
+    <string name="first_image">تصویر اول:</string>
+    <string name="second_image">تصویر دوم:</string>
+    <string name="angle_different_in_two_images">اختلاف زاویه در دو تصویر:</string>
+    <string name="natural_angle">زاویه در حالت نرمال:</string>
+    <string name="different_to_natural">اخلاف با زاویه در حالت نرمال:</string>
 </resources>
